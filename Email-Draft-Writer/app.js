@@ -27,7 +27,7 @@ function setStatus(msg, type = "info") {
 }
 
 function getApiBase() {
-  return localStorage.getItem("EMAIL_WRITER_API_BASE") || "";
+  return localStorage.getItem("EMAIL_WRITER_API_BASE") || window.location.origin;
 }
 
 function setApiBase(url) {
