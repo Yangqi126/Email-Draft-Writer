@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Email Draft Writer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <img class="brand-logo" src="assets/logo.svg" alt="SoftMail AI logo" />
+        <div class="brand-text">
+          <div class="brand-name">SoftMail</div>
+          <div class="brand-sub">AI Email Studio</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-item active" href="#">
+          <img class="nav-ico" src="assets/ico-wand.svg" alt="" aria-hidden="true">
+          Draft Writer
+        </a>
+        <a class="nav-item" href="#">
+          <img class="nav-ico" src="assets/ico-templates.svg" alt="" aria-hidden="true">
+          Templates
+          <span class="pill">Soon</span>
+        </a>
+        <a class="nav-item" href="#">
+          <img class="nav-ico" src="assets/ico-history.svg" alt="" aria-hidden="true">
+          History
+          <span class="pill">Soon</span>
+        </a>
+        <a class="nav-item" href="#">
+          <img class="nav-ico" src="assets/ico-settings.svg" alt="" aria-hidden="true">
+          Settings
+          <span class="pill">In panel</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user">
+          <img class="avatar" src="assets/avatar.svg" alt="" aria-hidden="true">
+          <div class="user-meta">
+            <div class="user-name">You</div>
+            <div class="user-plan">Student build</div>
+          </div>
+        </div>
+        <div class="tiny">Tip: keep API keys off GitHub.</div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1>Email Draft Writer</h1>
+          <p class="topbar-sub">Compose consistent emails with tone controls and one-click regeneration.</p>
+        </div>
+        <div class="topbar-right">
+          <div class="chip">
+            <span class="dot" aria-hidden="true"></span>
+            Ready
+          </div>
+          <button id="openAdvancedBtn" class="btn ghost">Advanced</button>
+        </div>
+      </header>
+
+      <section class="content">
+        <!-- Left: composer -->
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Composer</h2>
+            <p class="muted">Tell the assistant what you need. Keep it short and specific.</p>
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <label for="purpose">Purpose</label>
+              <input id="purpose" type="text" placeholder="e.g., Ask for extension on assignment" />
+            </div>
+            <div class="field">
+              <label for="tone">Tone</label>
+              <select id="tone">
+                <option value="formal">Formal</option>
+                <option value="friendly">Friendly</option>
+                <option value="urgent">Urgent</option>
+                <option value="apologetic">Apologetic</option>
+                <option value="confident">Confident</option>
+                <option value="concise">Concise</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="context">Key details / context</label>
+            <textarea id="context" rows="8" placeholder="What happened, what you want, dates, constraints, names..."></textarea>
+            <div class="hint">Example: “I was sick on Jan 30. Request 48-hour extension. Offer to provide doctor note.”</div>
+          </div>
+
+          <div class="actions">
+            <button id="generateBtn" class="btn primary">
+              <img class="btn-ico" src="assets/ico-spark.svg" alt="" aria-hidden="true">
+              Generate
+            </button>
+            <button id="regenBtn" class="btn ghost" disabled>Regenerate</button>
+            <button id="clearBtn" class="btn ghost">Clear</button>
+          </div>
+
+          <div id="status" class="status" aria-live="polite"></div>
+
+          <!-- Tiny prompt cards (visual depth) -->
+          <div class="quick">
+            <div class="quick-title">Quick prompts</div>
+            <div class="quick-grid">
+              <button class="quick-card" data-preset="meeting">
+                <img src="assets/card-meeting.svg" alt="" aria-hidden="true">
+                <div>
+                  <div class="qc-title">Request a meeting</div>
+                  <div class="qc-sub">Propose 2 time windows</div>
+                </div>
+              </button>
+              <button class="quick-card" data-preset="extension">
+                <img src="assets/card-calendar.svg" alt="" aria-hidden="true">
+                <div>
+                  <div class="qc-title">Ask for extension</div>
+                  <div class="qc-sub">Polite + specific deadline</div>
+                </div>
+              </button>
+              <button class="quick-card" data-preset="followup">
+                <img src="assets/card-followup.svg" alt="" aria-hidden="true">
+                <div>
+                  <div class="qc-title">Follow up</div>
+                  <div class="qc-sub">Short, friendly reminder</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: output -->
+        <section class="panel output">
+          <div class="panel-head">
+            <h2>Draft</h2>
+            <div class="head-actions">
+              <button id="copyBtn" class="btn ghost" disabled>Copy</button>
+              <button id="downloadBtn" class="btn ghost" disabled>Download</button>
+            </div>
+          </div>
+
+          <div class="empty" id="emptyState">
+            <img class="empty-illus" src="assets/empty.svg" alt="Illustration of a clean email draft" />
+            <div class="empty-title">Your draft will appear here</div>
+            <div class="empty-sub">Click <b>Generate</b> to create an email. Then tweak inputs and <b>Regenerate</b>.</div>
+          </div>
+
+          <textarea id="result" rows="16" readonly placeholder="Your email will appear here..."></textarea>
+
+          <details class="advanced" id="advancedPanel">
+            <summary>Advanced options</summary>
+            <div class="adv-grid">
+              <div class="field">
+                <label for="audience">Audience</label>
+                <select id="audience">
+                  <option value="professor">Professor / Instructor</option>
+                  <option value="manager">Manager</option>
+                  <option value="client">Client</option>
+                  <option value="coworker">Coworker</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="length">Length</label>
+                <select id="length">
+                  <option value="short">Short</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="long">Long</option>
+                </select>
+              </div>
+
+              <label class="check">
+                <input id="includeSubject" type="checkbox" checked />
+                Include subject line
+              </label>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="field">
+              <label for="apiBase">Backend URL</label>
+              <input id="apiBase" type="url" placeholder="https://your-vercel-app.vercel.app" />
+              <div class="hint">Calls: <code>{Backend URL}/api/generate</code></div>
+            </div>
+            <button id="saveSettingsBtn" class="btn ghost">Save settings</button>
+          </details>
+        </section>
+      </section>
+
+      <footer class="footer">
+        <small>Built for class: single-page app + AI API + deployment + documentation.</small>
+      </footer>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
